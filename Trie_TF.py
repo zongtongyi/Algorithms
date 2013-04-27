@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
-# * TF, Term Frequency. Use Trie-tree to calculate Term-Frequency.
+# * Calculate Term-Frequency Using Trie tree: Insert Term into Trie and increase the frequency number.
 
 class Node(object):
     def __init__(self):
