@@ -29,6 +29,18 @@ class Trie(object):
             node = node.children[c]
         return (True, node.word) if node.word else (False, None)
 
+    '''def delete(self, word, node=None, i=0):
+        node = node if node else self.root
+        c = word[i]
+        if c in node.children:
+            child_node = node.children[c]
+            if len(word)==(i+1):
+                return node.children.pop(c) if len(child_node.children)==0 else False
+            elif self.delete(word, child_node, i+1):
+                return node.children.pop(c) if (len(child_node.children)==0 and not child_node.word) else False
+        return False'''
+
+
 if __name__ == '__main__':
     tree = Trie()
     tree.insert('abcd')
