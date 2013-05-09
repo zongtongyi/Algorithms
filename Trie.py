@@ -32,7 +32,7 @@ class Trie(object):
         return (True, node.word) if node.word else (False, partial_match)
 
     def max_word_length(self):
-        return self.height(self)
+        return self.height()
 
     def __node_height(self, node_list):
         if len(node_list) == 0:
