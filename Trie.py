@@ -7,6 +7,7 @@
 class Node(object):
     def __init__(self):
         self.word = None
+        self.tf = 0
         self.children = {}
 
 class Trie(object):
@@ -21,6 +22,15 @@ class Trie(object):
             node = node.children[c]
         node.word = word
 
+    def insert_tf(self, word, tf):
+        node = self.root
+        for c in word:
+            if c not in node.children:
+                node.children[c] = Node()
+            node = node.children[c]
+        node.word = word
+        node.tf = tf
+
     def search(self, word):
         partial_match = []
         node = self.root
@@ -28,8 +38,9 @@ class Trie(object):
             if c not in node.children:
                 return (False, partial_match)
             node = node.children[c]
-            partial_match.append(c)
-        return (True, node.word) if node.word else (False, partial_match)
+            if node.word:
+                partial_match.append(node.word)
+        return (True, partial_match) if node.word else (False, partial_match)
 
     def max_word_length(self):
         return self.height()
