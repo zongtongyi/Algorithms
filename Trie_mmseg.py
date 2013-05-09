@@ -14,13 +14,24 @@ class Trie(object):
     def __init__(self):
         self.root = Node()
 
-    def insert(self, word):
+    '''def insert(self, word):
         node = self.root
         for c in word:
             if c not in node.children:
                 node.children[c] = Node()
             node = node.children[c]
-        node.word = word
+        node.word = word'''
+    
+    '''def search(self, word):
+        partial_match = []
+        node = self.root
+        for c in word:
+            if c not in node.children:
+                return (False, partial_match)
+            node = node.children[c]
+            if node.word:
+                partial_match.append(node.word)
+        return (True, partial_match) if node.word else (False, partial_match)'''
 
     def insert_tf(self, word, tf):
         node = self.root
@@ -31,17 +42,14 @@ class Trie(object):
         node.word = word
         node.tf = tf
 
-    def search(self, word):
-        partial_match = []
+    def search_tf(self,word):
         node = self.root
         for c in word:
             if c not in node.children:
-                return (False, partial_match)
+                return (False, 0)
             node = node.children[c]
-            if node.word:
-                partial_match.append(node.word)
-        return (True, partial_match) if node.word else (False, partial_match)
-
+        return (True, node.tf) if node.word else (False, 0)
+    
     def max_word_length(self):
         return self.height()
 
@@ -58,13 +66,12 @@ class Trie(object):
 
 if __name__ == '__main__':
     tree = Trie()
-    tree.insert('abcd')
-    tree.insert('ab')
-    tree.insert('better')
+    tree.insert_tf('abcd', 44)
+    tree.insert_tf('ab', 3542)
+    tree.insert_tf('better',52907)
     height = tree.height()
-    tree.insert('best')
-    a = tree.search('ab')
-    a = tree.search('be')
-    b = tree.search('best')
-    f = tree.search('better')
+    a = tree.search_tf('ab')
+    a = tree.search_tf('be')
+    b = tree.search_tf('best')
+    f = tree.search_tf('better')
     pass
