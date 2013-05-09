@@ -29,6 +29,20 @@ class Trie(object):
             node = node.children[c]
         return (True, node.word) if node.word else (False, None)
 
+    def max_word_length(self):
+        return self.height(self)
+
+    def __node_height(self, node_list):
+        if len(node_list) == 0:
+            return 0
+        else:
+            children_node_list = []
+            [children_node_list.extend( [v for v in node.children.itervalues()] ) for node in node_list]
+            return 1 + self.__node_height(children_node_list)
+
+    def height(self):
+        return 0 if not self.root.children else self.__node_height([v for v in self.root.children.itervalues()])
+
     def delete(self, word, node=None, i=0):
         node = node if node else self.root
         c = word[i]
@@ -46,6 +60,7 @@ if __name__ == '__main__':
     tree.insert('abcd')
     tree.insert('ab')
     tree.insert('better')
+    height = tree.height()
     tree.insert('best')
     a = tree.search('ab')
     a = tree.search('be')
