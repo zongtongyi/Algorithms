@@ -39,17 +39,19 @@ class Trie(object):
             if c not in node.children:
                 node.children[c] = Node()
             node = node.children[c]
-        node.word = word
-        node.tf = tf
+        node.word, node.tf = word, tf
 
-    def search_tf(self,word):
+    def search_tf(self, word):
+        partial_match = []
         node = self.root
         for c in word:
             if c not in node.children:
-                return (False, 0)
+                return (False, partial_match)
             node = node.children[c]
-        return (True, node.tf) if node.word else (False, 0)
-    
+            if node.word:
+                partial_match.append((node.word, node.tf))
+        return (True, partial_match) if node.word else (False, partial_match)
+
     def max_word_length(self):
         return self.height()
 
