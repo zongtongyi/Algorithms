@@ -29,7 +29,6 @@ class Chunk(object):
             return True
         else:
             return False
-            
 
 class MMSEG(object):
     def __init__(self, lexicon):
@@ -92,8 +91,8 @@ if __name__ == '__main__':
     [tree.insert_tf(word, tf) for word, tf in words_list]
 
     mmseg = MMSEG(tree)
-    '''corpus = "吃葡萄不吐葡萄皮，不吃葡萄到吐葡萄皮"
-    mmseg.word_seg_simple(corpus.decode('utf-8'))'''
+    corpus = "吃葡萄不吐葡萄皮，不吃葡萄到吐葡萄皮"
+    mmseg.word_seg_simple(corpus.decode('utf-8'))
 
     corpus = "研究生命起源"
     mmseg.word_seg_complex(corpus.decode('utf-8'))
