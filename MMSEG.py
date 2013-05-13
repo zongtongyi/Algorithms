@@ -6,7 +6,8 @@
 #
 
 import math
-from Trie_mmseg import *
+#from Trie import Trie_mmseg as Trie_mmseg
+from Trie.Trie_mmseg import *
 
 class Chunk(object):
     def __init__(self, tri_word_list, tf_list):
@@ -35,12 +36,12 @@ class MMSEG(object):
         self.lexicon = lexicon
         self.max_word_len = lexicon.max_word_length()
 
-    def word_seg_simple(self, corpus):
+    def word_seg_simpl(self, corpus):
         corpus_seg = ''
         i, j, corpus_len = 0, 0, len(corpus)
         while i < corpus_len:
             s = corpus[i:min(i + self.max_word_len, corpus_len)]
-            find, match = self.lexicon.search(s) # prefix match
+            find, match = self.lexicon.search_tf(s) # prefix match
             j = (i + 1) if len(match)==0 and find==False else ( i + len(match[-1]) )
             corpus_seg += corpus[i:j] + '/'
             i = j
@@ -87,6 +88,7 @@ class MMSEG(object):
 
 if __name__ == '__main__':
     words_list = [(line.split()[0].decode('utf-8'), line.split()[1]) for line in open('./lexicon/open-gram-m7.u8.lexicon').readlines()]
+    #tree = Trie_mmseg.Trie()
     tree = Trie()
     [tree.insert_tf(word, tf) for word, tf in words_list]
 
