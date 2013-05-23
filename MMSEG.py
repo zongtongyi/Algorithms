@@ -19,11 +19,8 @@ class Chunk(object):
         # Rule3: Smallest variance of word lengths
         self.rule3 = self.variance = ( (len(self.w1)-self.avg_len)**2 + (len(self.w2)-self.avg_len)**2 + (len(self.w3)-self.avg_len)**2 ) / 3
         # Rule4: Largest sum of degree of morphemic freedom of one-character words
-        self.sum_log_frequency = 0
-        for tf in tf_list:
-            log_single = 0 if tf==0 else math.log(tf)
-            self.sum_log_frequency += log_single
-        self.rule4 = self.sum_log_frequency
+        single_tf_list = [tf_list[i] for i in range(3) if len(tri_word_list[i])==1 and tf_list[i]!=0]
+        self.rule4 = 0 if not single_tf_list else reduce(lambda x, y: math.log(x) + math.log(y), single_tf_list)
 
     def __lt__(self, obj):
         if [self.rule1, self.rule2, -(self.rule3), self.rule4] < [obj.rule1, obj.rule2, -(obj.rule3), obj.rule4]:
@@ -36,13 +33,13 @@ class MMSEG(object):
         self.lexicon = lexicon
         self.max_word_len = lexicon.max_word_length()
 
-    def word_seg_simpl(self, corpus):
+    def word_seg_simple(self, corpus):
         corpus_seg = ''
         i, j, corpus_len = 0, 0, len(corpus)
         while i < corpus_len:
             s = corpus[i:min(i + self.max_word_len, corpus_len)]
             find, match = self.lexicon.search_tf(s) # prefix match
-            j = (i + 1) if len(match)==0 and find==False else ( i + len(match[-1]) )
+            j = (i + 1) if len(match)==0 else ( i + len(match[-1][0]) )
             corpus_seg += corpus[i:j] + '/'
             i = j
         print corpus_seg
