@@ -14,13 +14,29 @@ class Trie(object):
     def __init__(self):
         self.root = Node()
 
-    def insert(self, word):
+    def insert(self, word):    # Accumlate TF while insert word
         node = self.root
         for c in word:
             if c not in node.children:
                 node.children[c] = Node()
             node = node.children[c]
         node.word, node.tf = word, (node.tf + 1)
+    
+    def insert_0tf(self, word):    # ignore TF(keep as 1) while insert word
+        node = self.root
+        for c in word:
+            if c not in node.children:
+                node.children[c] = Node()
+            node = node.children[c]
+        node.word = word
+
+    def insert_tf(self, word, tf):    # SET TF while insert word
+        node = self.root
+        for c in word:
+            if c not in node.children:
+                node.children[c] = Node()
+            node = node.children[c]
+        node.word, node.tf = word, tf
     
     '''def search(self, word):
         partial_match = []
@@ -32,14 +48,6 @@ class Trie(object):
             if node.word:
                 partial_match.append(node.word)
         return (True, partial_match) if node.word else (False, partial_match)'''
-
-    def insert_tf(self, word, tf):
-        node = self.root
-        for c in word:
-            if c not in node.children:
-                node.children[c] = Node()
-            node = node.children[c]
-        node.word, node.tf = word, tf
 
     def search_tf(self, word):
         partial_match = []
