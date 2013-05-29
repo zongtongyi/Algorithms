@@ -32,21 +32,24 @@ class MMSEG(object):
     def __init__(self, lexicon):
         self.lexicon = lexicon
         self.max_word_len = lexicon.max_word_length()
+        self.corpus_seg_list = []
+
+    def print_seg(self):
+        str_print = reduce(lambda x,y: x + '/' + y, self.corpus_seg_list)
+        print str_print
 
     def word_seg_simple(self, corpus):
-        corpus_seg = ''
-        i, j, corpus_len = 0, 0, len(corpus)
+        i, j, corpus_len, self.corpus_seg_list = 0, 0, len(corpus), []
         while i < corpus_len:
             s = corpus[i:min(i + self.max_word_len, corpus_len)]
             find, match = self.lexicon.search_tf(s) # prefix match
             j = (i + 1) if len(match)==0 else ( i + len(match[-1][0]) )
-            corpus_seg += corpus[i:j] + '/'
+            self.corpus_seg_list.append(corpus[i:j])
             i = j
-        print corpus_seg
+        return self.corpus_seg_list
 
     def word_seg_complex(self, corpus):
-        i, i = 0, 0
-        corpus_len, corpus_seg = len(corpus), ''
+        i, corpus_len, self.corpus_seg_list = 0, len(corpus), []
         chunk_list = []
         while i < corpus_len:
             s = corpus[i:min(i + self.max_word_len, corpus_len)]
@@ -77,10 +80,10 @@ class MMSEG(object):
             else:
                 best_seg = max(chunk_list)
                 j = i + len(best_seg.w1)
-            corpus_seg += corpus[i:j] + '/'
+            self.corpus_seg_list.append(corpus[i:j])
             i = j
 
-        print corpus_seg
+        return self.corpus_seg_list
 
 
 if __name__ == '__main__':
