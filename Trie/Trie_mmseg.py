@@ -14,13 +14,13 @@ class Trie(object):
     def __init__(self):
         self.root = Node()
 
-    '''def insert(self, word):
+    def insert(self, word):
         node = self.root
         for c in word:
             if c not in node.children:
                 node.children[c] = Node()
             node = node.children[c]
-        node.word = word'''
+        node.word, node.tf = word, (node.tf + 1)
     
     '''def search(self, word):
         partial_match = []
