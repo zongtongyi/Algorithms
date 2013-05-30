@@ -74,6 +74,18 @@ class Trie(object):
     def height(self):
         return 0 if not self.root.children else self.__node_height([v for v in self.root.children.itervalues()])
 
+    def traverse_BFS(self): # Breadth-First Search
+        import Queue
+        node_queue = Queue.Queue()
+        node_queue.put(self.root)
+        while not node_queue.empty():
+            node = node_queue.get()
+            if node.word:
+                yield (node.word, node.tf)
+            if len(node.children) != 0:
+                [node_queue.put(node) for node in node.children.itervalues()]
+                
+
 if __name__ == '__main__':
     tree = Trie()
     tree.insert_tf('abcd', 44)
