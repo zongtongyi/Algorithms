@@ -4,6 +4,8 @@
 # * Algorithm refered : http://blog.csdn.net/v_july_v/article/details/6897097
 # * Codes Refered : http://blog.csdn.net/psrincsdn/article/details/8158182
 
+class MergeTypeError(Exception): pass
+
 class Node(object):
     def __init__(self):
         self.word = None
@@ -84,7 +86,12 @@ class Trie(object):
                 yield (node.word, node.tf)
             if len(node.children) != 0:
                 [node_queue.put(node) for node in node.children.itervalues()]
-                
+
+    def merge(self, Node_trie): # this incoming trie's node must be Node type
+        if not isinstance(Node_trie, Trie):
+            raise MergeTypeError('Incoming trie is not type(Trie)')
+        [self.insert(word) for word in Nodetrie.traverse_BFS()]
+
 
 if __name__ == '__main__':
     tree = Trie()
@@ -96,4 +103,6 @@ if __name__ == '__main__':
     a = tree.search_tf('be')
     b = tree.search_tf('best')
     f = tree.search_tf('better')
+    for word, tf in tree.traverse_BFS():
+        print word, tf
     pass
