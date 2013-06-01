@@ -61,14 +61,14 @@ class MMSEG(object):
                 i2 = i + len(word)
                 s2 = corpus[i2:min(i2+self.max_word_len, corpus_len)]
                 find2, match2 = self.lexicon.search_tf(s2)
-                match2 = match2 if len(match2)!=0 else [(s2[0], '1')] # unknown word
+                match2 = match2 if len(match2)!=0 else ([(s2[0], '1')] if len(s2)!=0 else [(' ', '1')]) # unknown word
                 for word2, tf2 in match2:
                     tri_word_list.append(word2)
                     tf_list.append(0 if len(word2)!=0 else tf2)
                     i3 = i2 + len(word2)
                     s3 = corpus[i3:min(i3+self.max_word_len, corpus_len)]
                     find3, match3 = self.lexicon.search_tf(s3)
-                    match3 = match3 if len(match3)!=0 else [(s3[0], '1')] # unknown word
+                    match3 = match3 if len(match3)!=0 else ([(s3[0], '1')] if len(s3)!=0 else [(' ', '1')]) # unknown word
                     for word3, tf3 in match3:
                         tri_word_list.append(word3)
                         tf_list.append(0 if len(word3)!=0 else tf3)
