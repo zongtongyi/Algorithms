@@ -90,10 +90,10 @@ class Trie(object):
     def merge(self, Node_trie): # this incoming trie's node must be Node type
         if not isinstance(Node_trie, Trie):
             raise MergeTypeError('Incoming trie is not type(Trie)')
-        [self.insert(word) for word, _ in Nodetrie.traverse_BFS()]
+        [self.insert(word) for word, _ in Node_trie.traverse_BFS()]
 
     def item_list(self, wordtf_list):
-        wordtf_list = [(tf, word) for word, tf in self.traverse_BFS()]
+        [wordtf_list.append((tf, word)) for word, tf in self.traverse_BFS()]
 
 
 if __name__ == '__main__':
