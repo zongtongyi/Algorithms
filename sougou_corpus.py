@@ -3,6 +3,7 @@
 # Corpus from Sougou.
 
 import os, copy, math, codecs
+import time
 from MMSEG import *
 from Trie.Trie_mmseg import *
 
@@ -13,15 +14,24 @@ class Sougou_Corpus(object):
         for root, dirs, files in os.walk(corpus_dir):
             [self.corpus_file_list.append(os.path.join(root, filename)) for filename in files]
 
+        # 2317164 / 6 = 386194 / 100 = 3861.94
+        i, start_time = 0, time.clock()
+
         for filename in self.corpus_file_list:
             with open(filename) as f:
                 for line in f.readlines():
                     if '<doc>' in line: # one <doc> section as one document
                         self.doc_count += 1
+                        i += 1
+                        if i%100 == 0:
+                            print "Finished ", i
                     elif '<content>' in line:
                         doc_word_trie = Trie()
                         [doc_word_trie.insert_0tf(word) for word in self.mmseg.word_seg_complex(line[9:-10].decode('utf-8'))]
                         self.doc_tf_tree.merge(doc_word_trie)
+
+        elapsed = time.clock() - start_time
+        print "time spend:", elapsed
 
     def corpus_data(self):
         doc_tf_tree = copy.deepcopy(self.doc_tf_tree)
