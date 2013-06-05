@@ -31,7 +31,7 @@ class Chunk(object):
 class MMSEG(object):
     def __init__(self, lexicon):
         self.lexicon = lexicon
-        self.max_word_len = lexicon.max_word_length()
+        self.max_word_len = lexicon.max_word_length
         self.corpus_seg_list = []
 
     def print_seg(self):
