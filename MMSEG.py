@@ -11,13 +11,26 @@ from Trie.Trie_mmseg import *
 
 class Chunk(object):
     def __init__(self, tri_word_list, tf_list):
+        self.w_number = 3 #default 3
+        self.w_number = reduce(lambda x,y: x+y, [1 for w in tri_word_list if len(w)!=0])
+
         self.w1, self.w2, self.w3 = tri_word_list
         # Rule1: Maximum Matching
         self.rule1 = self.length = len(self.w1) + len(self.w2) + len(self.w3)
         # Rule2: Largest average word length
-        self.rule2 = self.avg_len = float(self.length) / 3
+        self.rule2 = self.avg_len = float(self.length) / self.w_number
         # Rule3: Smallest variance of word lengths
-        self.rule3 = self.variance = ( (len(self.w1)-self.avg_len)**2 + (len(self.w2)-self.avg_len)**2 + (len(self.w3)-self.avg_len)**2 ) / 3
+        #self.rule3 = self.variance = ( (len(self.w1)-self.avg_len)**2 + (len(self.w2)-self.avg_len)**2 + (len(self.w3)-self.avg_len)**2 ) / 3
+        self.variance = (len(self.w1)-self.avg_len)**2
+        if len(self.w2):
+            self.variance += (len(self.w2)-self.avg_len)**2
+            if len(self.w3):
+                self.variance += (len(self.w3)-self.avg_len)**2
+                self.rule3 = self.variance / 3
+            else:
+                self.rule3 = self.variance / 2
+        else:
+            self.rule3 = self.variance
         # Rule4: Largest sum of degree of morphemic freedom of one-character words
         single_tf_list = [tf_list[i] for i in range(3) if len(tri_word_list[i])==1 and tf_list[i]!=0]
         self.rule4 = 0 if not single_tf_list else reduce(lambda x, y: math.log(x) + math.log(y), single_tf_list)
@@ -61,14 +74,14 @@ class MMSEG(object):
                 i2 = i + len(word)
                 s2 = corpus[i2:min(i2+self.max_word_len, corpus_len)]
                 find2, match2 = self.lexicon.search_tf(s2)
-                match2 = match2 if len(match2)!=0 else ([(s2[0], '1')] if len(s2)!=0 else [(' ', '1')]) # unknown word
+                match2 = match2 if len(match2)!=0 else ([(s2[0], '1')] if len(s2)!=0 else [('', '1')]) # unknown word
                 for word2, tf2 in match2:
                     tri_word_list.append(word2)
                     tf_list.append(0 if len(word2)!=0 else tf2)
                     i3 = i2 + len(word2)
                     s3 = corpus[i3:min(i3+self.max_word_len, corpus_len)]
                     find3, match3 = self.lexicon.search_tf(s3)
-                    match3 = match3 if len(match3)!=0 else ([(s3[0], '1')] if len(s3)!=0 else [(' ', '1')]) # unknown word
+                    match3 = match3 if len(match3)!=0 else ([(s3[0], '1')] if len(s3)!=0 else [('', '1')]) # unknown word
                     for word3, tf3 in match3:
                         tri_word_list.append(word3)
                         tf_list.append(0 if len(word3)!=0 else tf3)
@@ -92,7 +105,7 @@ if __name__ == '__main__':
     words_list = [(line.split()[0].decode('utf-8'), line.split()[1]) for line in open('./lexicon/open-gram-m7.u8.lexicon').readlines()]
     #tree = Trie_mmseg.Trie()
     tree = Trie()
-    [tree.insert_tf(word, tf) for word, tf in words_list]
+    [tree.insert_tf(word, int(tf)) for word, tf in words_list]
 
     mmseg = MMSEG(tree)
     corpus = "吃葡萄不吐葡萄皮，不吃葡萄到吐葡萄皮"
