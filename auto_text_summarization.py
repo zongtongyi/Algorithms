@@ -38,7 +38,6 @@ class Summarizer(object):
     def simplify_summarizer(self):
         # sentence segment
         sentences = []
-        juzi = ''
         with codecs.open(target_doc, 'r', 'utf-8') as f:
             for line in f.readlines:
                 i, j = 0, 0
@@ -60,6 +59,53 @@ class Summarizer(object):
                         break
 
         return summary_sentences
+
+    def luhn_summarizer(self):
+        class juzi_cluster(object):
+            def __init__(self):
+                self.key_count = 0
+                self.juzi_length = 0
+                self.cluter_value = 0
+            def cluster_value(key_count, juzi_length):
+                self.key_count = key_count
+                self.juzi_length = juzi_length
+                self.cluter_value = (key_count**2) / juzi_length
+            def __lt__(self, obj):
+                if self.cluter_value < obj.cluter_value:
+                    return True
+                else:
+                    return False
+
+        sentences = []
+        with codecs.open(target_doc, 'r', 'utf-8') as f:
+            for line in f.readlines:
+                i, j = 0, 0
+                for c in line:
+                    if c=='，'.decode('utf-8') or c==',' or c=='。'.decode('utf-8') or c=='.':
+                        sentences.append(line[i:j])
+                        i = j + 1
+                    else:
+                        j += 1
+
+        cluter_value_list = []
+        for juzi in sentences:
+            juzi_object = juzi_cluster()
+            juzi_key_count = 0
+            key_interval = 0
+            for word in mmseg.word_seg_complex(juzi):
+                if word in self.key_ranklist:
+                    juzi_key_count += 1
+                    key_interval = 0
+                else:
+                    key_interval += 1
+                    if key_interval == 5:
+                        juzi_object.cluster_value(juzi_key_count, len(juzi))
+                        cluter_value_list.append(juzi_object)
+                        juzi_key_count, key_interval = 0, 0
+                        continue
+
+        sort(cluter_value_list)
+        pass
 
 
 
