@@ -3,6 +3,8 @@
 # * trie, prefix tree. Build with O(n*len), len is average of n strings' length. Search with O(len).
 # * Algorithm refered : http://blog.csdn.net/v_july_v/article/details/6897097
 # * Codes Refered : http://blog.csdn.net/psrincsdn/article/details/8158182
+# * TODO: Node definition could be just 'val' and 'children', then define 'val' outside this algorithm, 
+# *       also Trie algorithm should just provide basic operations and expand operations by users
 
 class Node(object):
     def __init__(self):
