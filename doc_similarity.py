@@ -27,7 +27,7 @@ class TFxIDF_list(object):
 
         for target_doc in target_doc_list:
             with open(target_doc) as f:
-                target_doc_TF_Trie, target_doc_max5_trie = Trie(), Trie()
+                target_doc_TF_Trie, target_doc_TFxIDF_trie, target_doc_max5_trie = Trie(), Trie(), Trie()
 
                 for line in f.readlines():
                     [target_doc_TF_Trie.insert(word) for word in mmseg.word_seg_complex(line.decode('utf-8'))]
@@ -107,7 +107,7 @@ if __name__ == '__main__':
     dinomimator1 = sum(map(lambda x: x**2, key_tf_vector1))
     dinomimator2 = sum(map(lambda x: x**2, key_tf_vector2))
 
-    cosine = numerator / math.sqrt(dinomimator1) * math.sqrt(dinomimator2)
+    cosine = numerator / ( math.sqrt(dinomimator1) * math.sqrt(dinomimator2) )
 
     pass
 
